@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Overlay</title>
+    <!-- MapTiler Base -->
+    <link
+        href="https://api.maptiler.com/maps/streets/style.css?key=CAgganf0DMElVWkxBZeq"
+        rel="stylesheet"
+    />
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+        }
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <!-- MapTiler JS -->
+    <script src="https://api.maptiler.com/maps/streets/maplibre-gl.js"></script>
+    <script>
+        // Initialize the map
+        const map = new maplibregl.Map({
+            container: 'map', // HTML container id
+            style: 'https://api.maptiler.com/maps/streets/style.json?key=CAgganf0DMElVWkxBZeq', // replace YOUR_MAPTILER_KEY
+            center: [114.9398, 4.9031], // starting position [lon, lat]
+            zoom: 8 // starting zoom
+        });
+
+        // Optional: Add weather overlay tiles
+        map.on('load', () => {
+            map.addSource('temperature', {
+                type: 'raster',
+                tiles: [
+                    'https://api.maptiler.com/weather/temperature/{z}/{x}/{y}.png?key=CAgganf0DMElVWkxBZeq'
+                ],
+                tileSize: 256,
+                attribution: 'Weather overlay &copy; MapTiler'
+            });
+            map.addLayer({
+                id: 'temperature-layer',
+                type: 'raster',
+                source: 'temperature',
+                paint: { 'raster-opacity': 0.6 }
+            });
+        });
+    </script>
+</body>
+</html>
